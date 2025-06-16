@@ -1,5 +1,6 @@
 # Development directories
 node_modules/
+assets/
 test/
 __tests__/
 coverage/
