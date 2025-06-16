@@ -55,17 +55,6 @@ function findIconPath(startDir = process.cwd()) {
   return result;
 }
 
-function findPngFiles(dir = process.cwd(), results = []) {
-  const list = fs.readdirSync(dir);
-  for (const file of list) {
-    const fullPath = path.join(dir, file);
-    const stat = fs.statSync(fullPath);
-    if (stat.isDirectory()) findPngFiles(fullPath, results);
-    else if (file.toLowerCase().endsWith(".png")) results.push(fullPath);
-  }
-  return results;
-}
-
 function findIosFolderName() {
   const iosDir = path.resolve("ios");
   const dirs = fs.existsSync(iosDir) ? fs.readdirSync(iosDir) : [];
@@ -97,41 +86,41 @@ for (let i = 0; i < args.length; i++) {
   console.log(chalk.cyan("\n🚀 React Native App Icon Generator"));
 
   if (!iconPath) {
-    const pngFiles = findPngFiles();
+    const answers = await inquirer.prompt([
+      {
+        type: "input",
+        name: "iconPath",
+        message: "Enter path to PNG icon (default: app_icon.png):",
+        default: defaultIconFileName,
+      },
+      {
+        type: "input",
+        name: "background",
+        message: "Background color:",
+        default: defaultBackground,
+      },
+      {
+        type: "list",
+        name: "platform",
+        message: "Platform to generate:",
+        choices: ["android", "ios", "all"],
+        default: "all",
+      },
+    ]);
 
-    if (pngFiles.length === 0) {
-      console.error(chalk.red("❌ No PNG files found in the project directory."));
-      process.exit(1);
-    }
+    const inputPath = answers.iconPath.trim();
+    background = answers.background;
+    platform = answers.platform;
 
-    if (pngFiles.length === 1) {
-      iconPath = pngFiles[0];
-      console.log(chalk.yellow(`⚠️  Only one PNG file found. Using: ${iconPath}`));
+    if (inputPath === defaultIconFileName) {
+      const found = findIconPath();
+      if (!found) {
+        console.error(chalk.red(`❌ Could not find ${defaultIconFileName} in your project.`));
+        process.exit(1);
+      }
+      iconPath = found;
     } else {
-      const answers = await inquirer.prompt([
-        {
-          type: "list",
-          name: "iconPath",
-          message: "Select a PNG file to use as app icon:",
-          choices: pngFiles,
-        },
-        {
-          type: "input",
-          name: "background",
-          message: "Background color:",
-          default: defaultBackground,
-        },
-        {
-          type: "list",
-          name: "platform",
-          message: "Platform to generate:",
-          choices: ["android", "ios", "all"],
-          default: "all",
-        },
-      ]);
-      iconPath = path.resolve(answers.iconPath);
-      background = answers.background;
-      platform = answers.platform;
+      iconPath = path.resolve(inputPath);
     }
   }
 
