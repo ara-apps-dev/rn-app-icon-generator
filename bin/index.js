@@ -9,6 +9,8 @@ import inquirer from "inquirer";
 import ora from "ora";
 import imageType from "image-type";
 
+const PADDING_RATIO = 0.8;
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -32,15 +34,24 @@ const adaptiveIconSizes = {
 };
 
 const iosSizes = [
-  { size: 20, scale: 2 }, { size: 20, scale: 3 },
-  { size: 29, scale: 2 }, { size: 29, scale: 3 },
-  { size: 40, scale: 2 }, { size: 40, scale: 3 },
-  { size: 60, scale: 2 }, { size: 60, scale: 3 },
-  { size: 76, scale: 1 }, { size: 76, scale: 2 },
-  { size: 83.5, scale: 2 }, { size: 1024, scale: 1 },
+  { size: 20, scale: 2 },
+  { size: 20, scale: 3 },
+  { size: 29, scale: 2 },
+  { size: 29, scale: 3 },
+  { size: 40, scale: 2 },
+  { size: 40, scale: 3 },
+  { size: 60, scale: 2 },
+  { size: 60, scale: 3 },
+  { size: 76, scale: 1 },
+  { size: 76, scale: 2 },
+  { size: 83.5, scale: 2 },
+  { size: 1024, scale: 1 },
 ];
 
-function findIconPath(startDir = process.cwd(), filename = defaultIconFileName) {
+function findIconPath(
+  startDir = process.cwd(),
+  filename = defaultIconFileName
+) {
   let result = null;
   function walk(dir) {
     const files = fs.readdirSync(dir);
@@ -70,21 +81,36 @@ function findIosFolderName() {
 function getIdiom(size, scale) {
   if (size === 1024 && scale === 1) return "ios-marketing";
   const ipadSpecific = [
-    { size: 20, scale: 2 }, { size: 29, scale: 2 }, { size: 40, scale: 2 },
-    { size: 76, scale: 1 }, { size: 76, scale: 2 }, { size: 83.5, scale: 2 },
+    { size: 20, scale: 2 },
+    { size: 29, scale: 2 },
+    { size: 40, scale: 2 },
+    { size: 76, scale: 1 },
+    { size: 76, scale: 2 },
+    { size: 83.5, scale: 2 },
   ];
-  return ipadSpecific.find((i) => i.size === size && i.scale === scale) ? "ipad" : "iphone";
+  return ipadSpecific.find((i) => i.size === size && i.scale === scale)
+    ? "ipad"
+    : "iphone";
 }
 
 const args = process.argv.slice(2);
-let iconPath = null, background = defaultBackground, platform = "all", maskPath = null, outputDir = null;
+let iconPath = null,
+  background = defaultBackground,
+  platform = "all",
+  maskPath = null,
+  outputDir = null;
 
 for (let i = 0; i < args.length; i++) {
   if (!args[i].startsWith("--") && !iconPath) iconPath = path.resolve(args[i]);
-  else if (args[i] === "--background" && args[i + 1]) { background = args[++i]; }
-  else if (args[i] === "--platform" && args[i + 1]) { platform = args[++i]; }
-  else if (args[i] === "--mask" && args[i + 1]) { maskPath = path.resolve(args[++i]); }
-  else if (args[i] === "--output" && args[i + 1]) { outputDir = path.resolve(args[++i]); }
+  else if (args[i] === "--background" && args[i + 1]) {
+    background = args[++i];
+  } else if (args[i] === "--platform" && args[i + 1]) {
+    platform = args[++i];
+  } else if (args[i] === "--mask" && args[i + 1]) {
+    maskPath = path.resolve(args[++i]);
+  } else if (args[i] === "--output" && args[i + 1]) {
+    outputDir = path.resolve(args[++i]);
+  }
 }
 
 (async () => {
@@ -123,10 +149,16 @@ for (let i = 0; i < args.length; i++) {
     } else {
       const found = findIconPath();
       if (!found) {
-        console.error(chalk.red(`❌ Could not find ${defaultIconFileName} in your project (including subfolders).`));
+        console.error(
+          chalk.red(
+            `❌ Could not find ${defaultIconFileName} in your project (including subfolders).`
+          )
+        );
         process.exit(1);
       }
-      console.log(chalk.yellow(`🔍 Using automatically detected icon: ${found}`));
+      console.log(
+        chalk.yellow(`🔍 Using automatically detected icon: ${found}`)
+      );
       iconPath = found;
     }
   }
@@ -149,7 +181,8 @@ for (let i = 0; i < args.length; i++) {
 
   async function generateAndroid(iconPath, background) {
     const spinner = ora("Generating Android icons...").start();
-    const androidResPath = outputDir || path.resolve("android/app/src/main/res");
+    const androidResPath =
+      outputDir || path.resolve("android/app/src/main/res");
 
     for (const [folder, size] of Object.entries(androidSizes)) {
       const dest = path.join(androidResPath, folder);
@@ -159,7 +192,9 @@ for (let i = 0; i < args.length; i++) {
         .flatten({ background })
         .toFile(path.join(dest, "ic_launcher.png"));
 
-      const circleSvg = `<svg width="${size}" height="${size}"><circle cx="${size / 2}" cy="${size / 2}" r="${size / 2}" fill="white" /></svg>`;
+      const circleSvg = `<svg width="${size}" height="${size}"><circle cx="${
+        size / 2
+      }" cy="${size / 2}" r="${size / 2}" fill="white" /></svg>`;
       await sharp(iconPath)
         .resize(size, size)
         .composite([{ input: Buffer.from(circleSvg), blend: "dest-in" }])
@@ -170,11 +205,17 @@ for (let i = 0; i < args.length; i++) {
     for (const [folder, size] of Object.entries(adaptiveIconSizes)) {
       const dest = path.join(androidResPath, folder);
       await fs.ensureDir(dest);
-      const composite = sharp(iconPath).resize(size, size);
-      if (maskPath) {
-        const mask = await fs.readFile(maskPath);
-        composite.composite([{ input: mask, blend: "dest-in" }]);
-      }
+      const paddedSize = Math.floor(size * PADDING_RATIO);
+      const composite = sharp(iconPath)
+        .resize(paddedSize, paddedSize)
+        .extend({
+          top: Math.floor((size - paddedSize) / 2),
+          bottom: Math.ceil((size - paddedSize) / 2),
+          left: Math.floor((size - paddedSize) / 2),
+          right: Math.ceil((size - paddedSize) / 2),
+          background: { r: 0, g: 0, b: 0, alpha: 0 },
+        });
+
       await composite.toFile(path.join(dest, "ic_launcher_foreground.png"));
     }
 
@@ -185,7 +226,9 @@ for (let i = 0; i < args.length; i++) {
       `<?xml version="1.0" encoding="utf-8"?>\n<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">\n  <background android:drawable="@color/ic_launcher_background" />\n  <foreground android:drawable="@mipmap/ic_launcher_foreground" />\n</adaptive-icon>`
     );
 
-    const colorsPath = path.resolve("android/app/src/main/res/values/colors.xml");
+    const colorsPath = path.resolve(
+      "android/app/src/main/res/values/colors.xml"
+    );
     if (fs.existsSync(colorsPath)) {
       let content = await fs.readFile(colorsPath, "utf-8");
       if (!content.includes("ic_launcher_background")) {
@@ -201,7 +244,9 @@ for (let i = 0; i < args.length; i++) {
 
   async function generateIos(iconPath, iosFolder, background) {
     const spinner = ora("Generating iOS icons...").start();
-    const appIconPath = outputDir || path.resolve(`ios/${iosFolder}/Images.xcassets/AppIcon.appiconset`);
+    const appIconPath =
+      outputDir ||
+      path.resolve(`ios/${iosFolder}/Images.xcassets/AppIcon.appiconset`);
     await fs.ensureDir(appIconPath);
 
     const contents = [];
@@ -227,12 +272,18 @@ for (let i = 0; i < args.length; i++) {
       images: contents,
       info: { version: 1, author: "xcode" },
     };
-    await fs.writeJson(path.join(appIconPath, "Contents.json"), json, { spaces: 2 });
+    await fs.writeJson(path.join(appIconPath, "Contents.json"), json, {
+      spaces: 2,
+    });
     spinner.succeed("iOS icons generated.");
   }
 
-  if (platform === "android" || platform === "all") await generateAndroid(iconPath, background);
-  if ((platform === "ios" || platform === "all") && iosFolder) await generateIos(iconPath, iosFolder, background);
+  if (platform === "android" || platform === "all")
+    await generateAndroid(iconPath, background);
+  if ((platform === "ios" || platform === "all") && iosFolder)
+    await generateIos(iconPath, iosFolder, background);
 
-  console.log(chalk.green("\n🎉 All icons have been generated successfully!\n"));
+  console.log(
+    chalk.green("\n🎉 All icons have been generated successfully!\n")
+  );
 })();
