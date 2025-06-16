@@ -136,13 +136,6 @@ for (let i = 0; i < args.length; i++) {
     process.exit(1);
   }
 
-  const buffer = await fs.readFile(iconPath);
-  const type = imageType(buffer);
-  if (!type || type.mime !== "image/png") {
-    console.error(chalk.red(`❌ File is not a valid PNG image.`));
-    process.exit(1);
-  }
-
   const iosFolder = findIosFolderName();
   if (!iosFolder && (platform === "ios" || platform === "all")) {
     console.error(chalk.red("❌ Could not find your iOS project folder."));
