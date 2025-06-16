@@ -1,0 +1,23 @@
+# Development directories
+node_modules/
+test/
+__tests__/
+coverage/
+scripts/
+lib/         # Only if not needed in final package
+docs/
+
+# Editor & project-specific files
+.vscode/
+.env
+.history
+*.log
+*.lock
+package-lock.json
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Optional extras (if not needed in npm package)
+ENHANCED_README.md

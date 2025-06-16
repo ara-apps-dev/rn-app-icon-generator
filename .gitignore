@@ -1,0 +1,22 @@
+# Node modules
+node_modules/
+
+# Dependency lock
+package-lock.json
+
+# Build & dist output
+dist/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Editor & OS junk
+.DS_Store
+Thumbs.db
+.vscode/
+
+# History/session
+.history
