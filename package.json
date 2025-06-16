@@ -1,10 +1,10 @@
 {
   "name": "rn-app-icon-generator",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A CLI tool to generate iOS and Android app icons for React Native from a single 1024x1024 PNG image.",
   "main": "index.js",
   "bin": {
-    "rn-app-icon-generator": "./index.js"
+    "rn-app-icon-generator": "./bin/index.js"
   },
   "repository": {
     "type": "git",
@@ -26,7 +26,7 @@
   "author": "Putra",
   "license": "MIT",
   "files": [
-    "index.js",
+    "bin/index.js",
     "README.md"
   ],
   "dependencies": {

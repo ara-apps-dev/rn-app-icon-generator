@@ -5,7 +5,9 @@ const path = require("path");
 const sharp = require("sharp");
 const chalk = require("chalk");
 
-const iconFileName = "app_icon.png";
+console.log(chalk.green("Running rn-app-icon-generator CLI..."));
+
+const defaultIconFileName = "app_icon.png";
 
 const androidSizes = {
   "mipmap-mdpi": 48,
@@ -39,7 +41,7 @@ function findIconPath(startDir = process.cwd()) {
       const stat = fs.statSync(fullPath);
       if (stat.isDirectory()) {
         walk(fullPath);
-      } else if (file === iconFileName) {
+      } else if (file === defaultIconFileName) {
         result = fullPath;
         return;
       }
@@ -51,7 +53,7 @@ function findIconPath(startDir = process.cwd()) {
 
 function findIosFolderName() {
   const iosDir = path.resolve("ios");
-  const dirs = fs.readdirSync(iosDir);
+  const dirs = fs.existsSync(iosDir) ? fs.readdirSync(iosDir) : [];
   const proj = dirs.find((d) => d.endsWith(".xcodeproj"));
   return proj ? proj.replace(".xcodeproj", "") : null;
 }
@@ -108,14 +110,24 @@ async function generateIos(iconPath, iosFolder) {
 
 (async () => {
   console.log(chalk.cyan("\n🚀 React Native App Icon Generator"));
-  console.log(chalk.yellow(`🔍 Searching for '${iconFileName}'...`));
 
-  const iconPath = findIconPath();
-  if (!iconPath) {
+  const iconArg = process.argv[2];
+  let iconPath = iconArg ? path.resolve(iconArg) : findIconPath();
+
+  if (!iconPath || !fs.existsSync(iconPath)) {
     console.error(
       chalk.red(
-        `❌ '${iconFileName}' not found. Please place it somewhere in your project.`
+        `❌ Icon not found. Please place '${defaultIconFileName}' in your project or provide path:`
       )
+    );
+    console.log(chalk.yellow(`\nUsage:`));
+    console.log(
+      chalk.white(`  rn-app-icon-generator`) +
+        `          ← auto detect ${defaultIconFileName}`
+    );
+    console.log(
+      chalk.white(`  rn-app-icon-generator path/to/icon.png`) +
+        ` ← use custom icon`
     );
     process.exit(1);
   }
@@ -133,6 +145,6 @@ async function generateIos(iconPath, iosFolder) {
   await generateIos(iconPath, iosFolder);
 
   console.log(
-    chalk.green("\n🎉 All icons have been generated for Android and iOS!")
+    chalk.green("\n🎉 All icons have been generated for Android and iOS!\n")
   );
 })();
