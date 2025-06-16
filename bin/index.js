@@ -9,7 +9,7 @@ import inquirer from "inquirer";
 import ora from "ora";
 import imageType from "image-type";
 
-const PADDING_RATIO = 0.65;
+const PADDING_RATIO = 0.55;
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
