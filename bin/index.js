@@ -62,6 +62,12 @@ function findIosFolderName() {
   return proj ? proj.replace(".xcodeproj", "") : null;
 }
 
+function getIdiom(size, scale) {
+  if (size === 1024 && scale === 1) return "ios-marketing";
+  if (size >= 76) return "ipad";
+  return "iphone";
+}
+
 async function generateAndroid(iconPath) {
   console.log(chalk.green("📱 Generating Android icons..."));
   const androidResPath = path.resolve("android/app/src/main/res");
@@ -69,10 +75,18 @@ async function generateAndroid(iconPath) {
   for (const [folder, size] of Object.entries(androidSizes)) {
     const dest = path.join(androidResPath, folder);
     await fs.ensureDir(dest);
+
+    // Default launcher icon
     await sharp(iconPath)
       .resize(size, size)
       .flatten({ background: "#ffffff" })
       .toFile(path.join(dest, "ic_launcher.png"));
+
+    // Round launcher icon
+    await sharp(iconPath)
+      .resize(size, size)
+      .flatten({ background: "#ffffff" })
+      .toFile(path.join(dest, "ic_launcher_round.png"));
   }
 }
 
@@ -96,7 +110,7 @@ async function generateIos(iconPath, iosFolder) {
 
     contents.push({
       size: `${item.size}x${item.size}`,
-      idiom: "iphone",
+      idiom: getIdiom(item.size, item.scale),
       filename,
       scale: `${item.scale}x`,
     });
