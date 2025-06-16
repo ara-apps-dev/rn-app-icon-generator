@@ -55,6 +55,17 @@ function findIconPath(startDir = process.cwd()) {
   return result;
 }
 
+function findPngFiles(dir = process.cwd(), results = []) {
+  const list = fs.readdirSync(dir);
+  for (const file of list) {
+    const fullPath = path.join(dir, file);
+    const stat = fs.statSync(fullPath);
+    if (stat.isDirectory()) findPngFiles(fullPath, results);
+    else if (file.toLowerCase().endsWith(".png")) results.push(fullPath);
+  }
+  return results;
+}
+
 function findIosFolderName() {
   const iosDir = path.resolve("ios");
   const dirs = fs.existsSync(iosDir) ? fs.readdirSync(iosDir) : [];
@@ -86,14 +97,42 @@ for (let i = 0; i < args.length; i++) {
   console.log(chalk.cyan("\n🚀 React Native App Icon Generator"));
 
   if (!iconPath) {
-    const answers = await inquirer.prompt([
-      { type: "input", name: "iconPath", message: "Path to icon PNG:", default: defaultIconFileName },
-      { type: "input", name: "background", message: "Background color:", default: defaultBackground },
-      { type: "list", name: "platform", message: "Platform to generate:", choices: ["android", "ios", "all"], default: "all" },
-    ]);
-    iconPath = path.resolve(answers.iconPath);
-    background = answers.background;
-    platform = answers.platform;
+    const pngFiles = findPngFiles();
+
+    if (pngFiles.length === 0) {
+      console.error(chalk.red("❌ No PNG files found in the project directory."));
+      process.exit(1);
+    }
+
+    if (pngFiles.length === 1) {
+      iconPath = pngFiles[0];
+      console.log(chalk.yellow(`⚠️  Only one PNG file found. Using: ${iconPath}`));
+    } else {
+      const answers = await inquirer.prompt([
+        {
+          type: "list",
+          name: "iconPath",
+          message: "Select a PNG file to use as app icon:",
+          choices: pngFiles,
+        },
+        {
+          type: "input",
+          name: "background",
+          message: "Background color:",
+          default: defaultBackground,
+        },
+        {
+          type: "list",
+          name: "platform",
+          message: "Platform to generate:",
+          choices: ["android", "ios", "all"],
+          default: "all",
+        },
+      ]);
+      iconPath = path.resolve(answers.iconPath);
+      background = answers.background;
+      platform = answers.platform;
+    }
   }
 
   if (!fs.existsSync(iconPath)) {
