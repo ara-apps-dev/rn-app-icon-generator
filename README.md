@@ -1,3 +1,23 @@
+![Circle Mask Example](https://raw.githubusercontent.com/ara-apps-dev/rn-app-icon-generator/main/assets/banner.png)
+
+<p>
+  <!-- left -->
+   <!-- Project-specific badges -->
+  <a href="https://www.npmjs.com/package/rn-app-icon-generator">
+    <img src="https://img.shields.io/npm/v/rn-app-icon-generator.svg?style=flat&color=cb3837&logo=npm" alt="npm version">
+  </a>
+  <a href="https://github.com/ara-apps-dev/rn-app-icon-generator">
+    <img src="https://img.shields.io/github/stars/ara-apps-dev/rn-app-icon-generator?style=flat&logo=github" alt="GitHub stars">
+  </a>
+
+  <!-- right -->
+  <span>    
+    <a  href="https://github.com/ara-apps-dev/rn-app-icon-generator/issues">
+      <img src="https://img.shields.io/github/issues/ara-apps-dev/rn-app-icon-generator?style=flat" alt="GitHub issues" align="right">
+    </a>
+  </span>
+</p>
+
 # 🚀 React Native App Icon Generator
 
 A lightweight and hassle-free CLI tool to **generate iOS and Android app icons** in your React Native project from a **single 1024x1024 PNG image** — no config, no headache!
@@ -53,10 +73,11 @@ npx rn-app-icon-generator ./assets/logo.png
 ### 3️⃣ Use Additional CLI Options
 
 ```bash
-npx rn-app-icon-generator ./assets/icon.png
---background "#eeeeee"
---platform android
---output ./custom-icons
+npx rn-app-icon-generator ./assets/your_icon_name.png \
+  --background "#ffffff" \
+  --platform all \
+  --output ./custom-icons \
+  --mask ./assets/masks/circle-mask.png
 ```
 
 ---
@@ -65,12 +86,65 @@ npx rn-app-icon-generator ./assets/icon.png
 
 | Option         | Description                                                        |
 | -------------- | ------------------------------------------------------------------ |
-| `--background` | Background color (hex format). Default: `#ffffff`           |
+| `--background` | Background color (hex format). Default: `#ffffff`                  |
 | `--platform`   | Platform to generate: `android`, `ios`, or `all`. Default: `all`   |
 | `--output`     | Optional output directory (useful for preview/testing)             |
 | `--mask`       | Optional mask file (PNG/SVG) for Android adaptive icons foreground |
 
 > 💡 If no arguments are provided, the tool enters interactive mode.
+
+---
+
+## 🧱 Mask Support (for Adaptive Android Icons)
+
+The `--mask` option allows shaping the foreground icon for Android adaptive icons.
+
+✅ Supported Mask Formats:
+
+- `.png` — black & transparent areas (alpha mask)
+- `.svg` — vector path (e.g., circle, rounded square)
+
+## 🖼️ How It Works:
+
+- The mask is applied to the foreground icon (`ic_launcher_foreground.png`)
+- Using alpha masking or SVG shape with `sharp.composite(..., blend: "dest-in")`
+- This creates a custom-shaped icon for modern Android launchers
+
+## 📐 Example Usage:
+
+```
+npx rn-app-icon-generator ./assets/logo.png \
+  --mask ./assets/masks/circle-mask.svg
+```
+
+## 🎨 PNG Mask Example
+
+A 1024x1024 PNG with:
+
+- **White or opaque** = visible area
+- **Black or transparent** = cropped area
+
+## 📁 Example:
+
+```
+./assets/masks/circle-mask.png
+```
+
+##🧭 SVG Mask Example
+Example `circle-mask.svg`:
+
+[Download SVG](https://raw.githubusercontent.com/ara-apps-dev/rn-app-icon-generator/main/assets/circle.svg)
+
+<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg">
+<rect width="100%" height="100%" fill="#dfdfdf"/>
+<circle cx="50" cy="50" r="40" fill="white"/>
+</svg>
+
+You can also use:
+
+- Rounded rectangles
+- Star shapes
+- Any SVG path
 
 ---
 
