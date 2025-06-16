@@ -40,15 +40,20 @@ const iosSizes = [
   { size: 83.5, scale: 2 }, { size: 1024, scale: 1 },
 ];
 
-function findIconPath(startDir = process.cwd()) {
+function findIconPath(startDir = process.cwd(), filename = defaultIconFileName) {
   let result = null;
   function walk(dir) {
     const files = fs.readdirSync(dir);
     for (const file of files) {
       const fullPath = path.join(dir, file);
       const stat = fs.statSync(fullPath);
-      if (stat.isDirectory()) walk(fullPath);
-      else if (file === defaultIconFileName) result = fullPath;
+      if (stat.isDirectory()) {
+        walk(fullPath);
+        if (result) return;
+      } else if (file.toLowerCase() === filename.toLowerCase()) {
+        result = fullPath;
+        return;
+      }
     }
   }
   walk(startDir);
@@ -112,15 +117,17 @@ for (let i = 0; i < args.length; i++) {
     background = answers.background;
     platform = answers.platform;
 
-    if (inputPath === defaultIconFileName) {
+    const resolvedInput = path.resolve(inputPath);
+    if (fs.existsSync(resolvedInput)) {
+      iconPath = resolvedInput;
+    } else {
       const found = findIconPath();
       if (!found) {
-        console.error(chalk.red(`❌ Could not find ${defaultIconFileName} in your project.`));
+        console.error(chalk.red(`❌ Could not find ${defaultIconFileName} in your project (including subfolders).`));
         process.exit(1);
       }
+      console.log(chalk.yellow(`🔍 Using automatically detected icon: ${found}`));
       iconPath = found;
-    } else {
-      iconPath = path.resolve(inputPath);
     }
   }
 
