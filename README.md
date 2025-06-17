@@ -1,4 +1,4 @@
-![Circle Mask Example](https://raw.githubusercontent.com/ara-apps-dev/rn-app-icon-generator/main/assets/header_image.png)
+![Banner](https://raw.githubusercontent.com/ara-apps-dev/rn-app-icon-generator/main/assets/banner.png)
 
 <p>
   <!-- left -->
@@ -6,21 +6,33 @@
   <a href="https://www.npmjs.com/package/rn-app-icon-generator">
     <img src="https://img.shields.io/npm/v/rn-app-icon-generator.svg?style=flat&color=cb3837&logo=npm" alt="npm version">
   </a>
+  <a href="https://bundlephobia.com/package/rn-app-icon-generator">
+    <img src="https://img.shields.io/bundlephobia/minzip/rn-app-icon-generator?style=flat&label=size&logo=webpack" alt="Bundle Size">
+  </a>
+   <img src="https://img.shields.io/github/last-commit/ara-apps-dev/rn-app-icon-generator?style=flat&logo=github" alt="Last Commit">
+   <img src="https://img.shields.io/npm/l/rn-app-icon-generator?style=flat&color=blue" alt="License">
   <a href="https://github.com/ara-apps-dev/rn-app-icon-generator">
     <img src="https://img.shields.io/github/stars/ara-apps-dev/rn-app-icon-generator?style=flat&logo=github" alt="GitHub stars">
   </a>
+    <a  href="https://github.com/ara-apps-dev/rn-app-icon-generator/issues">
+      <img src="https://img.shields.io/github/issues/ara-apps-dev/rn-app-icon-generator?style=flat" alt="GitHub issues"  >
+    </a>
 
   <!-- right -->
-  <span>    
-    <a  href="https://github.com/ara-apps-dev/rn-app-icon-generator/issues">
-      <img src="https://img.shields.io/github/issues/ara-apps-dev/rn-app-icon-generator?style=flat" alt="GitHub issues" align="right">
+  <span>
+    <a href="https://www.npmjs.com/package/rn-app-icon-generator">
+      <img src="https://img.shields.io/npm/dm/rn-app-icon-generator?style=flat&color=orange&logo=npm" alt="Monthly Downloads" align="right">
     </a>
+    <img src="https://raw.githubusercontent.com/ara-apps-dev/rn-app-icon-generator/main/assets/circle.svg" alt="Circle Icon" align="right" width="5" height="1" />
+  <a href="https://www.npmjs.com/package/rn-app-icon-generator">
+    <img src="https://img.shields.io/npm/dt/rn-app-icon-generator?style=flat&color=orange&logo=npm" alt="Total Downloads" align="right">
+  </a>
   </span>
 </p>
 
 # 🚀 React Native App Icon Generator
 
-A lightweight and hassle-free CLI tool to **generate iOS and Android app icons** in your React Native project from a **single 1024x1024 PNG image** — no config, no headache!
+A lightweight and hassle-free CLI tool to **generate iOS and Android app icons** in your React Native project from a **single 1024x1024 PNG image** — no config required, just run and go!
 
 ---
 
@@ -97,7 +109,7 @@ npx rn-app-icon-generator ./assets/your_icon.png \
 
 ---
 
-## 🧱 Mask Support (for Adaptive Android Icons)
+## 🧱 Mask Support (Adaptive Android Icons)
 
 The `--mask` option allows shaping the foreground icon for Android adaptive icons.
 
@@ -138,12 +150,8 @@ A 1024x1024 PNG with:
 
 Example `circle-mask.svg`:
 
+<img src="https://raw.githubusercontent.com/ara-apps-dev/rn-app-icon-generator/main/assets/circle.svg" alt="Circle Icon" align="right" width="100" height="100" background-color="#dfdfdf" />
 [Download SVG](https://raw.githubusercontent.com/ara-apps-dev/rn-app-icon-generator/main/assets/circle.svg)
-
-<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg">
-<rect width="100%" height="100%" fill="#dfdfdf"/>
-<circle cx="50" cy="50" r="40" fill="white"/>
-</svg>
 
 You can also use:
 

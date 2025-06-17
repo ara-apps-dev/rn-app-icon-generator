@@ -20,3 +20,9 @@ Thumbs.db
 
 # History/session
 .history
+
+# Android
+android/
+
+# iOS
+ios/
