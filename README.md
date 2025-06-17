@@ -1,4 +1,4 @@
-![Circle Mask Example](https://raw.githubusercontent.com/ara-apps-dev/rn-app-icon-generator/main/assets/banner.png)
+![Circle Mask Example](https://raw.githubusercontent.com/ara-apps-dev/rn-app-icon-generator/main/assets/header_image.png)
 
 <p>
   <!-- left -->
@@ -65,7 +65,9 @@ npx rn-app-icon-generator
 You can specify your own icon path:
 
 ```bash
-npx rn-app-icon-generator ./assets/logo.png
+npx rn-app-icon-generator ./assets/your_icon.png \
+  --background "#ffffff" \
+  --platform all \
 ```
 
 ---
@@ -73,11 +75,11 @@ npx rn-app-icon-generator ./assets/logo.png
 ### 3️⃣ Use Additional CLI Options
 
 ```bash
-npx rn-app-icon-generator ./assets/your_icon_name.png \
+npx rn-app-icon-generator ./assets/your_icon.png \
   --background "#ffffff" \
   --platform all \
   --output ./custom-icons \
-  --mask ./assets/masks/circle-mask.png
+  --mask ./assets/masks/circle-mask.png (png or svg)
 ```
 
 ---
@@ -113,7 +115,9 @@ The `--mask` option allows shaping the foreground icon for Android adaptive icon
 ## 📐 Example Usage:
 
 ```
-npx rn-app-icon-generator ./assets/logo.png \
+npx rn-app-icon-generator ./assets/your_icon.png \
+  --background "#ffffff" \
+  --platform all \
   --mask ./assets/masks/circle-mask.svg
 ```
 
@@ -127,10 +131,11 @@ A 1024x1024 PNG with:
 ## 📁 Example:
 
 ```
-./assets/masks/circle-mask.png
+./assets/masks/circle-mask.svg
 ```
 
-##🧭 SVG Mask Example
+## 🧭 SVG Mask Example
+
 Example `circle-mask.svg`:
 
 [Download SVG](https://raw.githubusercontent.com/ara-apps-dev/rn-app-icon-generator/main/assets/circle.svg)
@@ -143,7 +148,7 @@ Example `circle-mask.svg`:
 You can also use:
 
 - Rounded rectangles
-- Star shapes
+- Circle
 - Any SVG path
 
 ---
@@ -186,14 +191,14 @@ npx rn-app-icon-generator
 ## 💻 Example Script (CI/CD)
 
 ```bash
-npx rn-app-icon-generator ./branding/icon.png --background "#000000" --platform all
+npx rn-app-icon-generator ./branding/your_icon.png --background "#000000" --platform all
 ```
 
 Add to your `package.json` scripts:
 
 ```json
 "scripts": {
-"generate:icons": "rn-app-icon-generator ./assets/icon.png --background '#fff'"
+    "generate:icons": "rn-app-icon-generator ./branding/your_icon.png --background '#ffffff' --platform all"
 }
 ```
 
