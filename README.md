@@ -151,6 +151,7 @@ A 1024x1024 PNG with:
 Example `circle-mask.svg`:
 
 <img src="https://raw.githubusercontent.com/ara-apps-dev/rn-app-icon-generator/main/assets/circle.svg" alt="Circle Icon" align="right" width="100" height="100" background-color="#dfdfdf" />
+
 [Download SVG](https://raw.githubusercontent.com/ara-apps-dev/rn-app-icon-generator/main/assets/circle.svg)
 
 You can also use:
